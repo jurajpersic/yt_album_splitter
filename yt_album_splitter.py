@@ -5,6 +5,8 @@ from pydub.silence import split_on_silence
 import io
 import re
 import sys
+import glob
+import os
 
 ydl_opts = {
     'format': 'bestaudio/best',
@@ -26,8 +28,10 @@ info = ydl.extract_info(url, download=False)
 ydl.download([url])
 
 full_filename = info['title'] + u'-'+ info['display_id']+'.mp3'
+list_of_files = glob.glob('*.mp3') # * means all if need specific format then *.csv
+latest_file = max(list_of_files, key=os.path.getctime)
 
-sound = AudioSegment.from_mp3(full_filename)
+sound = AudioSegment.from_mp3(latest_file)
 
 file = io.open(text_file,'r', encoding='utf-8')
 data = file.read()
